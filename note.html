@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="">
+</head>
+<body>
+    <div class="dashboard">
+        <aside>
+            <h1>Dashboard</h1>
+            <nav>
+                <ul>
+                    <li><a href="notes.html" onclick="showSection('notes')">Notes</a></li>
+                    <li><a href="tasks.html" onclick="showSection('tasks')">Tasks</a></li>
+                    <li><a href="timer.html" onclick="showSection('timer')">Timer</a></li>
+                </ul>
+            </nav>
+        </aside>
+        <div class="main-content">
+            <section id="notes" class="section">
+                <h2>Notes</h2>
+                <div class="note-input">
+                    <input type="text" id="note-title" placeholder="Note Title">
+                    <textarea id="note-content" placeholder="Note Content"></textarea>
+                    <button onclick="addNote()">Add Note</button>
+                </div>
+                <div class="notes-list" id="notes-list"></div>
+            </section>
+            <section id="tasks" class="section hidden">
+                <h2>Tasks</h2>
+                <div class="task-input">
+                    <input type="text" id="task-title" placeholder="Task Title">
+                    <button onclick="addTask()">Add Task</button>
+                </div>
+                <ul class="tasks-list" id="tasks-list"></ul>
+            </section>
+            <section id="timer" class="section hidden">
+                <h2>Timer</h2>
+                <div class="timer">
+                    <span id="timer-display">00:00:00</span>
+                    <button onclick="startTimer()">Start</button>
+                    <button onclick="stopTimer()">Stop</button>
+                    <button onclick="resetTimer()">Reset</button>
+                </div>
+            </section>
+        </div>
+    </div>
+    <script src="js/note.js"></script>
+</body>
+</html>

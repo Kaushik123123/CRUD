@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": ".vscode"
+		},
+		{
+			"path": "css"
+		},
+		{
+			"path": "js"
+		},
+		{
+			"path": "sounds"
+		},
+		{
+			"path": "vendor"
+		}
+	]
+}

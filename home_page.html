@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="css/styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD - Manage Your Notes Efficiently</title>
+    <style>
+        body {
+            background-color: #58a9ff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth; /* Smooth scrolling */
+        }
+        .header {
+            background-color: #2b91ff; /* Placeholder image */
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+            height: 850px;
+            overflow: hidden;
+        }
+        .header:hover {
+            width:800px;
+        }
+        .process:hover {
+            width:1000px;
+        }
+        .advantages:hover {
+            width:1000px;
+        }
+        .header h1, .header p {
+            animation: fadeInDown 1.5s ease-in-out; /* Adding animation */
+        }
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .header h1 {
+            font-size: 50px;
+            margin: 0;
+        }
+        .header p {
+            font-size: 24px;
+            margin: 10px 0 0;
+        }
+        .process {
+            text-align: center;
+            padding: 50px 20px;
+        }
+        .process h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 50px 20px;
+            transform: translateY(50px);
+            animation: fadeInUp 1s forwards 1s; /* Delay for advantages section */
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 0;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: fadeInUp 1s forwards;
+        }
+        .step:nth-child(even) .content {
+            order: -1;
+        }
+        .step:nth-child(1) {
+            animation-delay: 0.3s;
+        }
+        .step:nth-child(2) {
+            animation-delay: 0.6s;
+        }
+        .step:nth-child(3) {
+            animation-delay: 0.9s;
+        }
+        .step:nth-child(4) {
+            animation-delay: 1.2s;
+        }
+        .step:nth-child(5) {
+            animation-delay: 1.5s;
+        }
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .step .content {
+            max-width: 600px;
+            text-align: left;
+            padding: 0 20px;
+        }
+        .step .number {
+            font-size: 100px;
+            color: #333;
+            opacity: 0.1;
+        }
+        .advantages {
+            background: #86c1ff;
+            padding: 50px 20px;
+            text-align: center;
+            opacity: 0;
+            height: 950px;
+            transform: translateY(50px);
+            animation: fadeInUp 1s forwards 1.8s; /* Delay for advantages section */
+        }
+        .advantages h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        .advantages ul {
+            list-style: none;
+            padding: 0;
+            font-size: 20px;
+        }
+        .advantages ul li {
+            margin: 10px 0;
+        }
+        .bold {
+            color: black;
+        }
+        .sidebar {
+            height: 1010px;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto; /* 15% from the top and centered */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+            max-width: 300px;
+            text-align: center;
+        }
+
+        .close, .confirm, .cancel {
+            background-color: #2b91ff;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .close:hover, .confirm:hover, .cancel:hover {
+            background-color: #1a6cbf;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Dashboard</h2>
+        <ul>
+            <li><a href="home_page.html">Home</a></li>
+            <li><a href="notes.html">Notes</a></li>
+            <li><a href="tasks.html">Tasks</a></li>
+            <li><a href="timer.html">Timer</a></li>
+            <li><a href="logout.php" id="logoutLink">Logout</a></li>
+        </ul>
+    </div>
+    <div class="header"><br><br><br>
+        <h1 class="bold">CRUD</h1>
+        <p class="bold">Create Read Update Delete</p>
+    </div>
+
+    <div class="process">
+        <h2>Process</h2>
+        <div class="step">
+            <div class="number">01</div>
+            <div class="content">
+                <h3>Research & Analyze</h3>
+                <p>Understand the needs and requirements for an efficient digital notes system.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="number">02</div>
+            <div class="content">
+                <h3>Concept & Sketch</h3>
+                <p>Design the interface and functionalities of the CRUD notes application.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="number">03</div>
+            <div class="content">
+                <h3>Add Notes</h3>
+                <p>Seamlessly add and manage your notes digitally.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="number">04</div>
+            <div class="content">
+                <h3>Create Checklists</h3>
+                <p>Organize your tasks with easy-to-create checklists.</p>
+            </div>
+        </div>
+        <div class="step">
+            <div class="number">05</div>
+            <div class="content">
+                <h3>Set Reminders</h3>
+                <p>Never miss a task with timely reminders.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="advantages"><br><br><br>
+        <h2>Why us?</h2>
+        <ul>
+            <li>No need to carry physical notebooks.</li>
+            <li>Access your notes from anywhere using your phone.</li>
+            <li>Environment-friendly and paperless.</li>
+            <li>Easy to organize and search your notes.</li>
+            <li>Set reminders to stay on top of your tasks.</li>
+        </ul>
+    </div>
+
+    <!-- Modal structure -->
+    <div id="logoutModal" class="modal">
+        <div class="modal-content">
+            <p>Are you sure you want to log out?</p>
+            <button class="confirm">Yes</button>
+            <button class="cancel">No</button>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript for modal functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            var logoutLink = document.getElementById('logoutLink');
+            var modal = document.getElementById('logoutModal');
+            var confirmBtn = modal.querySelector('.confirm');
+            var cancelBtn = modal.querySelector('.cancel');
+
+            logoutLink.addEventListener('click', function(event) {
+                event.preventDefault();
+                modal.style.display = 'block';
+            });
+
+            confirmBtn.addEventListener('click', function() {
+                window.location.href = 'login.html';
+            });
+
+            cancelBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+            });
+
+            // Close the modal when clicking outside of it
+            window.addEventListener('click', function(event) {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

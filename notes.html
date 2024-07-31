@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <h2>Dashboard</h2>
+            <ul>
+                <li><a href="home_page.html">Home</a></li>
+                <li><a href="notes.html">Notes</a></li>
+                <li><a href="tasks.html">Tasks</a></li>
+                <li><a href="timer.html">Timer</a></li>
+                <li><a href="logout.php" id="logoutLink">Logout</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="container">
+                <header>
+                    <h1>Notes</h1>
+                    <button id="addNoteButton">Add Note</button>
+                </header>
+                <main>
+                    <div id="notesList" class="notes-list">
+                        <div class="note">
+                            <h3>Note Title</h3>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Form for Adding/Updating Notes -->
+    <div id="notePopup" class="popup hidden">
+        <div class="popup-content">
+            <span id="closePopup" class="close-button">&times;</span>
+            <h2 id="popupTitle">Add Note</h2>
+            <input type="hidden" id="noteId">
+            <input type="text" id="noteTitle" placeholder="Title">
+            <textarea id="noteContent" placeholder="Content"></textarea>
+            <button id="saveNoteButton">Save Note</button>
+        </div>
+    </div>
+
+<div id="viewNotePopup" class="popup hidden">
+    <div class="popup-content view-note-popup">
+        <span id="closeViewPopup" class="close-button">&times;</span>
+        <h2 id="viewNoteTitle">Note Title</h2>
+        <div class="view-note-content">
+            <p id="viewNoteContent">Note Content</p>
+        </div>
+        <div class="note-actions">
+            <button id="editNoteButton">Edit</button>
+            <button id="deleteNoteButton">Delete</button>
+            <button id="addImageButton">Add Image</button>
+        </div>
+        <div class="image-container">
+            <img id="viewNoteImage" src="" alt="Note Image" class="note-image hidden">
+            <span id="deleteImageButton" class="delete-image hidden">&times;</span>
+        </div>
+    </div>
+</div>
+
+
+    <!-- Popup for Empty Note Fields -->
+    <div id="emptyNotePopup" class="popup hidden">
+        <div class="popup-content">
+            <span id="closeEmptyNotePopup" class="close-button">&times;</span>
+            <h2>Fill all the fields</h2>
+        </div>
+    </div>
+
+    <!-- Audio elements for sounds -->
+    <audio id="editSound" src="sounds/edit.mp3"></audio>
+    <audio id="deleteSound" src="sounds/delete.mp3"></audio>
+
+    <script src="js/notes.js"></script>
+</body>
+</html>

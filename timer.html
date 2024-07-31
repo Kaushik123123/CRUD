@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reminder</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #000000;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+        .container {
+            width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 2px solid #007BFF;
+            border-radius: 10px;
+            background-color: #ffffff;
+        }
+        h1 {
+            color: #3498db;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input[type="text"], input[type="time"], input[type="date"] {
+            width: calc(100% - 22px);
+            padding: 5px;
+            margin-bottom: 10px;
+        }
+        input[type="submit"] {
+            background-color: #007BFF;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        .reminder-container {
+            position: relative;
+            border: 2px solid #007BFF;
+            border-radius: 10px;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #9fbcda; /* Blue background for running timers */
+        }
+        .reminder-container.completed {
+            background-color: #8acb8c; /* Green background for completed timers */
+        }
+        .reminder-container h2 {
+            color: #007BFF;
+            margin-top: 0;
+        }
+        .timer {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #007BFF;
+            font-weight: bold;
+        }
+        .tick {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: green;
+            font-weight: bold;
+            font-size: 24px;
+        }
+        .delete-button {
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <h2>Dashboard</h2>
+            <ul>
+                <li><a href="home_page.html">Home</a></li>
+                <li><a href="notes.html">Notes</a></li>
+                <li><a href="tasks.html">Tasks</a></li>
+                <li><a href="timer.html">Timer</a></li>
+                <li><a href="logout.php" id="logoutLink">Logout</a></li>
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="container">
+                <h1>Set a Reminder</h1>
+                <form id="reminderForm">
+                    <label for="task">Task:</label>
+                    <input type="text" id="task" name="task" required>
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" name="date" required>
+                    <label for="time">Time:</label>
+                    <input type="time" id="time" name="time" required>
+                    <input type="submit" value="Set Reminder">
+                </form>
+            </div>
+
+            <div id="reminders"></div>
+        </div>
+    </div>
+    <audio id="alarmSound" src="sounds/alarm-clock-short-6402.mp3" preload="auto"></audio>
+    <script>
+        document.getElementById("reminderForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            var task = document.getElementById("task").value;
+            var date = document.getElementById("date").value;
+            var time = document.getElementById("time").value;
+            var datetime = new Date(date + "T" + time);
+
+            var currentTime = new Date();
+            var timeDifference = datetime.getTime() - currentTime.getTime();
+
+            if (timeDifference > 0) {
+                var reminder = { task, date, time };
+                saveReminder(reminder);
+                displayReminder(reminder, datetime, timeDifference);
+            } else {
+                alert("Please select a future date and time.");
+            }
+        });
+
+        function saveReminder(reminder) {
+            var reminders = JSON.parse(localStorage.getItem("reminders")) || [];
+            reminders.push(reminder);
+            localStorage.setItem("reminders", JSON.stringify(reminders));
+        }
+
+        function loadReminders() {
+            var reminders = JSON.parse(localStorage.getItem("reminders")) || [];
+            reminders.forEach(reminder => {
+                var datetime = new Date(reminder.date + "T" + reminder.time);
+                var currentTime = new Date();
+                var timeDifference = datetime.getTime() - currentTime.getTime();
+                displayReminder(reminder, datetime, timeDifference);
+            });
+        }
+
+        function deleteReminder(reminderContainer, task) {
+            var reminders = JSON.parse(localStorage.getItem("reminders")) || [];
+            reminders = reminders.filter(r => r.task !== task);
+            localStorage.setItem("reminders", JSON.stringify(reminders));
+            reminderContainer.remove();
+        }
+
+        function displayReminder(reminder, datetime, timeDifference) {
+            var reminderContainer = document.createElement("div");
+            reminderContainer.className = "reminder-container";
+
+            var reminderHeader = document.createElement("h2");
+            reminderHeader.textContent = "Task: " + reminder.task + " - " + datetime.toLocaleString("en-US", { hour: 'numeric', minute: 'numeric', hour12: true });
+            reminderContainer.appendChild(reminderHeader);
+
+            var timer = document.createElement("div");
+            timer.className = "timer";
+            reminderContainer.appendChild(timer);
+
+            var deleteButton = document.createElement("button");
+            deleteButton.className = "delete-button";
+            deleteButton.textContent = "Delete";
+            deleteButton.addEventListener("click", function() {
+                deleteReminder(reminderContainer, reminder.task);
+            });
+            reminderContainer.appendChild(deleteButton);
+
+            var countdownInterval = setInterval(function() {
+                timeDifference -= 1000;
+                if (timeDifference <= 0) {
+                    clearInterval(countdownInterval);
+                    triggerCompletion(reminderContainer);
+                }
+                timer.textContent = formatTime(timeDifference);
+            }, 1000);
+
+            document.getElementById("reminders").appendChild(reminderContainer);
+        }
+
+        function triggerCompletion(reminderContainer) {
+            var alarmSound = document.getElementById("alarmSound");
+            alarmSound.play().catch(function(error) {
+                console.error("Audio playback failed:", error);
+            });
+
+            var tick = document.createElement("div");
+            tick.className = "tick";
+            tick.textContent = "✔";
+            reminderContainer.appendChild(tick);
+
+            reminderContainer.classList.add("completed");
+        }
+
+        function formatTime(milliseconds) {
+            var totalSeconds = Math.floor(milliseconds / 1000);
+            var hours = Math.floor(totalSeconds / 3600);
+            var minutes = Math.floor((totalSeconds % 3600) / 60);
+            var seconds = totalSeconds % 60;
+            return padZero(hours) + ":" + padZero(minutes) + ":" + padZero(seconds);
+        }
+
+        function padZero(number) {
+            if (number < 10) {
+                return "0" + number;
+            }
+            return number;
+        }
+
+        loadReminders();
+    </script>
+</body>
+</html>
